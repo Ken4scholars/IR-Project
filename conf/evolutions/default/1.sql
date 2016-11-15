@@ -1,0 +1,16 @@
+# --- !Ups
+
+CREATE TABLE Document(
+  id SERIAL PRIMARY KEY NOT NULL,
+  title VARCHAR(500),
+  date TIMESTAMP WITH TIME ZONE,
+  url VARCHAR(1000) NOT NULL ,
+  path VARCHAR(1000) NOT NULL ,
+  summary VARCHAR(5000) NOT NULL
+
+);
+
+
+# --- !Downs
+
+DROP TABLE IF EXISTS Document;
