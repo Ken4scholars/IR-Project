@@ -15,27 +15,13 @@
 
     <h1 align="center">Vert Search</h1>
     
-    <form id="searchForm" method="post">
+    <form class="form-inline" role="form" method="get" action="@routes.SearchController.search()">
 		<fieldset>
         
-           	<input id="s" type="text" />
+           	<input name="query" id="s" type="text">
             
-            <input type="submit" value="Submit" id="submitButton" />
-            
-            <div id="searchInContainer">
-                <input type="radio" name="check" value="site" id="searchSite" checked />
-                <label for="searchSite" id="siteNameLabel">Search</label>
-                
-                <input type="radio" name="check" value="web" id="searchWeb" />
-                <label for="searchWeb">Search The Web</label>
-			</div>
-                        
-            <ul class="icons">
-                <li class="web" title="Web Search" data-searchType="web">Web</li>
-                <li class="images" title="Image Search" data-searchType="images">Images</li>
-                <li class="news" title="News Search" data-searchType="news">News</li>
-                <li class="videos" title="Video Search" data-searchType="video">Videos</li>
-            </ul>
+            <button type="submit" value="Submit" id="submitButton"/>
+
             
         </fieldset>
     </form>
@@ -45,8 +31,6 @@
 </div>
 
 <!-- It would be great if you leave the link back to the tutorial. Thanks! -->
-<p class="credit"><a href="http://tutorialzine.com/2010/09/google-powered-site-search-ajax-jquery/search.scala.html">Powered by Vert</a></p>
-    
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="@routes.Assets.versioned("javascripts/scripts.js")"></script>
 </body>

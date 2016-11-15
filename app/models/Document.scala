@@ -2,36 +2,40 @@ package models
 
 import org.joda.time.DateTime
 import play.api.libs.json.Json
+
 import scala.concurrent.Future
 import slick.driver.PostgresDriver.api._
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
+import mappings.SlickMapping.jodaDateTimeMapping
 
 
 /**
   * Created by kenneth on 14.11.16.
   */
-case class Document(id: Option[Long], title: String, date: DateTime, url: String, path: String, summary: String)
+case class Document(id: Option[Long], title: String, time: DateTime, url: String, path: String, summary: String)
 
 object Document{
   implicit val documentFormat = Json.format[Document]
 
 
-  class DocumentTable(tag: Tag) extends Table[Document](tag, "Document"){
+  class DocumentTable(tag: Tag) extends Table[Document](tag, "document"){
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def title = column[String]("title")
-    def time = column[DateTime]("date")
+    def time = column[DateTime]("time")
     def url = column[String]("url")
     def path = column[String]("path")
     def summary = column[String]("summary")
 
-    def * = (id, title, time, url, path, summary) <> ((Document.apply _).tupled, Document.unapply)
+    def * = (id.?, title, time, url, path, summary) <> ((Document.apply _).tupled, Document.unapply)
 
   }
 
   val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
+  import dbConfig.driver.api._
 
   val documents = TableQuery[DocumentTable]
 
