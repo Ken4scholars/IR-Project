@@ -1,0 +1,26 @@
+ul.paginator {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.paginator li {display: inline;}
+
+ul.paginator li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+}
+
+ul.paginator li a.active {
+    background-color: #2539af;
+    color: #ddd;
+    border: 1px solid #2539af;
+}
+
+ul.paginator li a:hover:not(.disabled):not(.active) {background-color: #ddd;}
+
+div.pb_centered {text-align: center;}

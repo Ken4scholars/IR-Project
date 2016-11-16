@@ -11,6 +11,8 @@ GET     /message                    controllers.AsyncController.message
 
 GET  /search                       controllers.SearchController.search(query: String ?="hello")
 
+GET  /search/:page                       controllers.SearchController.searchList(query: String ="hello", page: Int)
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

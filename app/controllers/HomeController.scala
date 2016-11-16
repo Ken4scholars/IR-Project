@@ -19,6 +19,7 @@ class HomeController @Inject() extends Controller {
    */
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
+    //Ok(views.html.search)
   }
 
 }
