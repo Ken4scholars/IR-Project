@@ -1,37 +1,42 @@
-@(title: String)
-<!DOCTYPE html>
+@()
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>@title</title>
-
-<link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/search-styles.css")" />
-
+	<title>search system</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script>
+	<link href="@routes.Assets.versioned("stylesheets/app.css")" rel="stylesheet" type="text/css">
 </head>
+<body id="index">
+	
+	<script src="@routes.Assets.versioned("javascipts/app.min.js")"></script>
+	
+	<div class="page">
+		<div class="page-body">
+			<div class="bg">
+				<div class="container jumbotron hcenter" id="content">
+					<img class="logo" src="@routes.Assets.versioned("images/logo.png")">
+					<p>Search The Web</p>
+					<form action="@routes.SearchController.search()" method="get" novalidate="">
+						<div class="input-group">
+							<input style="font-size:25px" id="search" name="query" class="form-control" type="text" placeholder="Ex: Russia" tabindex="1">
+							<span class="input-group-addon"><input type="submit" class="btn searchbtn" value="Search"></span>
 
-<body>
-
-<div id="page">
-
-    <h1 align="center">Vert Search</h1>
-    
-    <form class="form-inline" role="form" method="get" action="@routes.SearchController.search()">
-		<fieldset>
-        
-           	<input name="query" id="s" type="text">
-            
-            <button type="submit" value="Submit" id="submitButton"/>
-
-            
-        </fieldset>
-    </form>
-
-    <div id="resultsDiv"></div>
-    
-</div>
-
-<!-- It would be great if you leave the link back to the tutorial. Thanks! -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script src="@routes.Assets.versioned("javascripts/scripts.js")"></script>
-</body>
-</html>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<nav class="navbar" role="navigation">
+				<div class="container">
+				</div>
+			</nav>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(window).ready(function(){
+			$('#search').trigger('focus');
+		});
+	</script>
+	
+</body></html>

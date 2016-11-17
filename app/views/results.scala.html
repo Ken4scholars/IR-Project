@@ -1,41 +1,69 @@
 @import models.Document
 
-@(results: Array[Document])
+@(results: Array[Document], count:Int, page:Int, pageLength:Int)
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title></title>
 
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/results.css")" />
-    </head>
-    <body>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<title>Search System</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script>
+	<link href="@routes.Assets.versioned("stylesheets/pagination.css")" rel="stylesheet" type="text/css">
+	<link href="@routes.Assets.versioned("stylesheets/app.css")" rel="stylesheet" type="text/css">
+</head>
+<body id="search" class="navbar-fixed">
+	<script src="@routes.Assets.versioned("javascipts/app.min.js")"></script>
+	
+	<div class="page">
+		<nav class="navbar navbar-fixed-top header" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<form class="navbar-form navbar-left hidden-xs" action="@routes.SearchController.search()" method="get" id="nav-search">
+						<!--input type="hidden" id="search-sort-by" name="s" value=""-->
+						<div class="input-group">
+							<input style="font-size:25px" type="text" class="form-control" id="in-search" placeholder="E.g Russia" name="query" >
+							<span class="input-group-addon"><input type="submit" class="btn btn-primary btn-lg" value="Search"></span>
+						</div>
+					</form>
+				</div>
+				<div class="collapse navbar-collapse navbar-ex1-collapse navbar-right">
+					<ul class="nav navbar-nav">
+						<li class="dropdown visible-xs">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="icon"><i class="icon-tags"></i></span>Tags</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div id="page-body-spacer"></div>
+		<div class="fullpage"></div>
+		<div class="page-body-ef">
+			<div id="main-content">
+				<div class="container" id="search-content">
+					<div id="search-header">
+						<div id="title" class="col-lg-12 col-sm-12 col-xs-12">
+							<h3>Metrics</h3>
+							<div class="pull-left">
+								<p>@count Results</p>
+							</div>
+						</div>
+						<table class="table borderless">
+						@for(document <- results){
+							<tr class="row">
+								<td>
+									<h4><a href="@document.url">@document.title</a><br>
+									<small>@document.summary</small></h4>
+								</td>
+							</tr>
+						}
+						</table>
 
-        <div class="container">
+						@pagination(page, pageLength, count, routes.SearchController.searchList(_))
 
-            <header class="mb20">
-                <h1>Search Results</h1>
-                <h2 class="lead"><strong class="text-danger">@results.length</strong> results were found</h2>
-            </header>
-
-            <section class="col-xs-12 col-sm-6 col-md-12">
-                @for(document <- results) {
-                    <article class="search-result row">
-                        <div class="col-xs-12 col-sm-12 col-md-2">
-                            <ul class="meta-search">
-                                <li><i class="glyphicon glyphicon-calendar"></i> <span>@document.time</span></li>
-                            </ul>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
-                            <h3><a href="@document.url" title="">@document.title</a></h3>
-                            <p>@document.summary</p>
-                            <span class="plus"><a href="#" title="Lorem ipsum"><i class="glyphicon glyphicon-plus"></i></a></span>
-                        </div>
-                        <span class="clearfix borda"></span>
-                    </article>
-                }
-            </section>
-        </div>
-    </body>
-</html>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer empty"></div>
+	</div>
+</body></html>

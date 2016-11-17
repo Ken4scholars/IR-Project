@@ -25,18 +25,8 @@ import scala.util.{Failure, Success}
   */
 class SearchController extends Controller {
 
-  //  case class queryForm(query: String)
-  //  val contactForm = Form(
-  //    mapping(
-  //      "query" -> Forms.nonEmptyText
-  //    )(queryForm.apply)(queryForm.unapply)
-  //  )
-  //  val queryForm = Form(
-  //    single("query" -> text)
-  //  )
-  //val page = 0
   var data: Array[Document] = Array.empty[Document]
-  val pageLength = 5
+  val pageLength = 10
 
   def search(query: String) = Action.async { request =>
     println(query)
@@ -48,7 +38,7 @@ class SearchController extends Controller {
     val futures = Future.sequence(docs.toTraversable)
     futures map { documents =>
       data = documents.toArray
-      Ok(views.html.result2(data.slice(0, pageLength), data.length, 1, pageLength))
+      Ok(views.html.results(data.slice(0, pageLength), data.length, 1, pageLength))
     }
   }
 
@@ -57,9 +47,8 @@ class SearchController extends Controller {
     else {
       val beg = (page - 1) * pageLength
       val documents = data.slice(beg, beg + pageLength)
-      //val notifications = Model.getNotifiactionsByUser(user, (page-1)*pageLength, pageLength)
       val count = data.length
-      Ok(views.html.result2(documents, count, page, pageLength))
+      Ok(views.html.results(documents, count, page, pageLength))
     }
   }
 
