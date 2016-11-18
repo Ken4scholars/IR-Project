@@ -9,9 +9,11 @@ GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code
 GET     /message                    controllers.AsyncController.message
 
-GET  /search                       controllers.SearchController.search(query: String ?="hello")
+GET  /search                        controllers.SearchController.search(query: String ?="hello")
 
-GET  /search/:page                       controllers.SearchController.searchList(query: String ="hello", page: Int)
+GET  /search/:page                  controllers.SearchController.searchList(query: String ="hello", page: Int)
+
+GET /api/search                     controllers.SearchController.apiSearch(query: String ?="hello")
 
 
 # Map static resources from the /public folder to the /assets URL path
