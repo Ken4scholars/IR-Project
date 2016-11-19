@@ -26,10 +26,6 @@ object DocumentService {
   }
 
 
-  def getDocumentByPath(path: String): Future[Option[Document]] = {
-    Document.getByPath(path)
-  }
-
   def listAllDocuments: Future[Seq[Document]] = {
     Document.listAll
   }

@@ -9,5 +9,5 @@ trait Engine {
 }
 
 object SearchEngine extends Engine {
-  override def searchResult(query: String): Array[Int] = 1.until(12).toArray
+  override def searchResult(query: String): Array[Int] = 1.until(13).toArray
 }

@@ -21,7 +21,7 @@
 					<form class="navbar-form navbar-left hidden-xs" action="@routes.SearchController.search()" method="get" id="nav-search">
 						<!--input type="hidden" id="search-sort-by" name="s" value=""-->
 						<div class="input-group">
-							<input style="font-size:25px" type="text" class="form-control" id="in-search" placeholder="E.g Russia" name="query" >
+							<input style="font-size:25px" type="text" class="form-control" id="in-search" placeholder="E.g Winter in Russia" name="query" >
 							<span class="input-group-addon"><input type="submit" class="btn btn-primary btn-lg" value="Search"></span>
 						</div>
 					</form>
@@ -44,15 +44,17 @@
 						<div id="title" class="col-lg-12 col-sm-12 col-xs-12">
 							<h3>Metrics</h3>
 							<div class="pull-left">
-								<p>@count Results</p>
+								<p>Results: @count Pages</p>
+								<p>Precision: 90%</p>
 							</div>
 						</div>
 						<table class="table borderless">
 						@for(document <- results){
 							<tr class="row">
 								<td>
-									<h4><a href="@document.url">@document.title</a><br>
-									<small>@document.summary</small></h4>
+                                    <h4><a href="@{if (document.url.slice(0,3).toLowerCase() == "www") "http://"}@document.url" target="_blank">@document.title</a></h4>
+                                    @document.summary
+
 								</td>
 							</tr>
 						}

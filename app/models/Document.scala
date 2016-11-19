@@ -15,7 +15,7 @@ import mappings.SlickMapping.jodaDateTimeMapping
 /**
   * Created by kenneth on 14.11.16.
   */
-case class Document(id: Option[Long], title: String, time: DateTime, url: String, path: String, summary: String)
+case class Document(id: Option[Long], title: String, url: String, summary: String)
 
 object Document{
   implicit val documentFormat = Json.format[Document]
@@ -25,12 +25,10 @@ object Document{
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def title = column[String]("title")
-    def time = column[DateTime]("time")
     def url = column[String]("url")
-    def path = column[String]("path")
     def summary = column[String]("summary")
 
-    def * = (id.?, title, time, url, path, summary) <> ((Document.apply _).tupled, Document.unapply)
+    def * = (id.?, title,  url, summary) <> ((Document.apply _).tupled, Document.unapply)
 
   }
 
@@ -53,10 +51,6 @@ object Document{
   }
   def getByUrl(url: String): Future[Option[Document]] = {
     dbConfig.db.run(documents.filter(_.url === url).result.headOption)
-  }
-
-  def getByPath(path: String): Future[Option[Document]] = {
-    dbConfig.db.run(documents.filter(_.path === path).result.headOption)
   }
 
   def listAll: Future[Seq[Document]] = {
