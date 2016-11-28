@@ -1,13 +1,15 @@
 package engine
 
 /**
-  * Created by kenneth on 15.11.16.
+  * Created by Gregory on 27.11.16.
   */
 trait Engine {
-  def searchResult(query: String): Array[Int]
+  def searchResult(query: String): Seq[Int]
+}
+
+object EngineImpl extends Engine {
+
+  override def searchResult(query: String): Seq[String] = InvertedIndexImpl.getTopKSimilarDocs(query, 100)
 
 }
 
-object SearchEngine extends Engine {
-  override def searchResult(query: String): Array[Int] = 1.until(13).toArray
-}
