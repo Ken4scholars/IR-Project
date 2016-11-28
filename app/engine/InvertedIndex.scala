@@ -70,7 +70,7 @@ object InvertedIndexImpl extends InvertedIndex {
   }
 
 
-  private def computeDocTfIdfScore(f: File) = {
+  def computeDocTfIdfScore(f: File) = {
     val vec = SparseVector.zeros[Double](terms.size)
     val lines = Source.fromFile(f).getLines()
     val text = lines.drop(1).mkString(" ")
@@ -79,6 +79,15 @@ object InvertedIndexImpl extends InvertedIndex {
     fileTerms.foreach(term => vec(termNumber(term)) = termFrequency(term, text)) //LNC variant
 
     docsTfIdfScores(Integer.parseInt(f.getName.split(".")(0))) = normalize(vec)
+  }
+
+  def computeDocTfIdfScore(text: String) = {
+    val vec = SparseVector.zeros[Double](terms.size)
+    val docTerms = mutable.HashSet(stemTokens(tokenize(text)) :_*)
+
+    docTerms.foreach(term => vec(termNumber(term)) = termFrequency(term, text)) //LNC variant
+
+    normalize(vec)
   }
 
   override def getTopKSimilarDocs(query: String, numberOfDocs: Int): Seq[String] = {
@@ -129,6 +138,7 @@ object InvertedIndexImpl extends InvertedIndex {
       if (!line.isEmpty) {
         if (line.replaceAll("\\s+","") == "/") {
           metricsDocs(count) = str.toString()
+          count += 1
           str = new StringBuilder
         } else {
           str.append(line)
