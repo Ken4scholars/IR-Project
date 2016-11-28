@@ -14,7 +14,9 @@ libraryDependencies ++= Seq(
   "org.webjars" % "jquery" % "2.1.3",
   "com.typesafe.play" %% "play-slick" % "1.1.1",
   "com.typesafe.play" %% "play-slick-evolutions" % "1.1.1",
-  "postgresql" % "postgresql" % "9.1-901.jdbc4"
+  "postgresql" % "postgresql" % "9.1-901.jdbc4",
+  "org.scalanlp" %% "epic-parser-en-span" % "2015.1.25",
+  "org.scalanlp" %% "breeze" % "0.12"
 )
 
 
