@@ -7,7 +7,6 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api._
 import play.api.mvc._
 import play.api.libs.json.Json
-import searchAPI._
 import services.DocumentService
 import engine._
 import models.Document
@@ -31,9 +30,9 @@ class SearchController extends Controller {
 
   def search(query: String) = Action.async { request =>
     println(query)
-    val result = SearchEngine.searchResult(query)
+    val result = EngineImpl.searchResult(query)
     val docs = result.map { res =>
-      val f: Future[Option[Document]] = DocumentService.getDocumentByID(res)
+      val f: Future[Option[Document]] = DocumentService.getDocumentByUrl(res)
       f.collect { case Some(doc) => doc }
     }
     val futures = Future.sequence(docs.toTraversable)
@@ -45,9 +44,9 @@ class SearchController extends Controller {
 
   def apiSearch(query: String) = Action.async { request =>
     println(query)
-    val result = SearchEngine.searchResult(query)
+    val result = EngineImpl.searchResult(query)
     val docs = result.map { res =>
-      val f: Future[Option[Document]] = DocumentService.getDocumentByID(res)
+      val f: Future[Option[Document]] = DocumentService.getDocumentByUrl(res)
       f.collect { case Some(doc) => doc }
     }
     val futures = Future.sequence(docs.toTraversable)
