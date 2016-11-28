@@ -9,7 +9,7 @@ trait Engine {
 
 object EngineImpl extends Engine {
 
-  override def searchResult(query: String): (Double, Double, Seq[String]) = InvertedIndexImpl.getTopKSimilarDocs(query, 100)
+  override def searchResult(query: String): Seq[String] = InvertedIndexImpl.getTopKSimilarDocs(query, 100)
 
 }
 

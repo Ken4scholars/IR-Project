@@ -13,7 +13,7 @@ import scala.io.Source
   */
 trait InvertedIndex {
 
-  def getTopKSimilarDocs(query: String, numberOfDocs: Int): (Double, Double, Seq[String])
+  def getTopKSimilarDocs(query: String, numberOfDocs: Int): Seq[String]
 
 }
 
@@ -81,16 +81,15 @@ object InvertedIndexImpl extends InvertedIndex {
     docsTfIdfScores(Integer.parseInt(f.getName.split(".")(0))) = normalize(vec)
   }
 
-  override def getTopKSimilarDocs(query: String, numberOfDocs: Int): (Double, Double, Seq[String]) = {
+  override def getTopKSimilarDocs(query: String, numberOfDocs: Int): Seq[String] = {
     val queryScore = queryTfIdfScore(query)
-    val retrievedDocs =  docsTfIdfScores
+    docsTfIdfScores
       .map(t => (t._1, t._2.dot(queryScore)))
       .toSeq
       .sortBy(- _._2)
       .take(numberOfDocs)
       .map(t => t._1)
-
-    (map, calcPrecisionAtK(query, retrievedDocs), retrievedDocs.map(docId => docIdUrl(docId)))
+      .map(docId => docIdUrl(docId))
   }
 
   //LTC variant
