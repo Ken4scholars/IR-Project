@@ -1,0 +1,15 @@
+package engine
+
+/**
+  * Created by Gregory on 27.11.16.
+  */
+trait Engine {
+  def searchResult(query: String): Seq[Int]
+}
+
+object EngineImpl extends Engine {
+
+  override def searchResult(query: String): (Double, Double, Seq[String]) = InvertedIndexImpl.getTopKSimilarDocs(query, 100)
+
+}
+
