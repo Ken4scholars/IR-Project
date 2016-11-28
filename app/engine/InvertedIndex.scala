@@ -55,7 +55,7 @@ object InvertedIndexImpl extends InvertedIndex {
 
   }
 
-  private def fileRoutine(f: File) = {
+  def fileRoutine(f: File) = {
     val lines = Source.fromFile(f).getLines()
     docIdUrl(Integer.parseInt(f.getName.split(".")(0))) = lines.toSeq.head
     val fileTerms = mutable.HashSet(stemTokens(tokenize(lines.drop(1).mkString(" "))) :_*)
