@@ -46,13 +46,15 @@
 							<div class="pull-left">
 								<p>Results: @count Pages</p>
 								<p>Precision: 90%</p>
+                                <p>Mean Global Precision: 95%</p>
 							</div>
 						</div>
 						<table class="table borderless">
 						@for(document <- results){
 							<tr class="row">
 								<td>
-                                    <h4><a href="@{if (document.url.slice(0,3).toLowerCase() == "www") "http://"}@document.url" target="_blank">@document.title</a></h4>
+                                    <a href="@{if (document.url.slice(0,3).toLowerCase() == "www") "http://"}@document.url" style="font-size: 25px" target="_blank">@document.title</a><br>
+                                    <a href="@{if (document.url.slice(0,3).toLowerCase() == "www") "http://"}@document.url" style="color: #47a447" target="_blank">@document.url</a><br>
                                     @document.summary
 
 								</td>
