@@ -1,12 +1,13 @@
 @(page:Int, pageLength:Int, collectionLength:Int, route:Int => Call, bound:Int = 5)
 @lowbound() = @{
-    ((page.toDouble / bound).floor * bound).toInt
+    (((page.toDouble - 1) / bound).floor * bound).toInt + 1
 }
 @highbound() = @{
-    if ((lowbound() + bound) * pageLength >= collectionLength)
-        collectionLength / pageLength + 1
+    if ((lowbound() + bound - 1) * pageLength > collectionLength)
+//        collectionLength / pageLength + 1
+        (collectionLength.toDouble / pageLength).ceil.toInt
     else
-        lowbound() + bound
+        lowbound() + bound - 1
 }
 
 <div class="pb_centered">
@@ -39,13 +40,13 @@
                 <li><a href="@route(i)">@i</a></li>
             }
 
-            @if(highbound() * pageLength <= collectionLength && highbound() > page && page * pageLength != collectionLength) {
-                <li><a href="@route(highbound())">&raquo;</a></li>
+            @if((highbound() + 1) * pageLength <= collectionLength && page * pageLength < collectionLength) {
+                <li><a href="@route(highbound() + 1)">&raquo;</a></li>
             } else {
                 <li><a class="disabled" href="#">&raquo;</a></li>
             }
 
-            @if(page < highbound()) {
+            @if((page + 1) * pageLength <= collectionLength) {
                 <li><a href="@route(page+1)">Next</a></li>
             } else {
                 <li><a class="disabled" href="#">Next</a></li>

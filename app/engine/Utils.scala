@@ -9,10 +9,11 @@ import epic.preprocess.MLSentenceSegmenter
 object Utils {
 
   def tokenize(text: String): Seq[String] = {
-    val splitter = MLSentenceSegmenter.bundled().get
-    val tokenizer = new epic.preprocess.TreebankTokenizer()
-
-    splitter(text.toLowerCase()).flatMap(tokenizer)
+//    val splitter = MLSentenceSegmenter.bundled().get
+//    val tokenizer = new epic.preprocess.TreebankTokenizer()
+//
+//    splitter(text.toLowerCase()).flatMap(tokenizer)
+    text.toLowerCase.split("\\.| |,|\\?|!")
 
   }
 

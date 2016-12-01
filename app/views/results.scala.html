@@ -1,6 +1,6 @@
 @import models.Document
 
-@(results: Array[Document], count:Int, page:Int, pageLength:Int)
+@(results: Array[Document], count:Int, page:Int, pageLength:Int, query: String)
 
 
 <html xmlns="http://www.w3.org/1999/html">
@@ -44,9 +44,8 @@
 						<div id="title" class="col-lg-12 col-sm-12 col-xs-12">
 							<h3>Metrics</h3>
 							<div class="pull-left">
+								<p>Query: @query</p>
 								<p>Results: @count Pages</p>
-								<p>Precision: 90%</p>
-                                <p>Mean Global Precision: 95%</p>
 							</div>
 						</div>
 						<table class="table borderless">
@@ -62,7 +61,7 @@
 						}
 						</table>
 
-						@pagination(page, pageLength, count, routes.SearchController.searchList(_))
+						@pagination(page, pageLength, count, routes.SearchController.searchList(query,_))
 
 					</div>
 				</div>

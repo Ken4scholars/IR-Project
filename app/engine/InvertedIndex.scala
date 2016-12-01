@@ -4,6 +4,7 @@ import java.io.File
 
 import breeze.linalg.{SparseVector, normalize}
 import engine.Utils._
+import org.apache.commons.lang3.StringUtils
 
 import scala.collection.mutable
 import scala.io.Source
@@ -21,10 +22,13 @@ trait InvertedIndex {
 object InvertedIndexImpl extends InvertedIndex {
 
   var initialized = false
-  val terms = new mutable.HashSet[String] //vocabulary
+  val terms = new mutable.LinkedHashSet[String] //vocabulary
   val docIdUrl = new mutable.HashMap[Int, String]()
   val termNumber = new mutable.HashMap[String, Int] //number of dimension for term
   val termNumberOfOccurrences = new mutable.HashMap[String, Int]() { override def default(key: String) = 0 }
+//  val termNumberOfOccurrences = new mutable.HashMap[String, mutable.Map[Int, Int]]() {
+//    override def default(key: String) = new mutable.HashMap[Int, Int]().withDefaultValue(0)
+//  }
   val docsTfIdfScores = new mutable.HashMap[Int, SparseVector[Double]]
   val invertedDocumentFrequency = new mutable.HashMap[String, Double]()
 
@@ -38,7 +42,7 @@ object InvertedIndexImpl extends InvertedIndex {
 
 
 
-  def init(dirName: String, measuredQueriesFileName: String, relevantDocsFileName: String, docsFileName: String) = {
+  def init(dirName: String) = {
 
     if (!initialized) {
       initialized = true
@@ -47,45 +51,56 @@ object InvertedIndexImpl extends InvertedIndex {
       dir.listFiles().foreach(fileRoutine)
       dir.listFiles().foreach(computeDocTfIdfScore)
       terms.foreach(term => {
+        //invertedDocumentFrequency(term) = math.log(terms.size / termNumberOfOccurrences(term).values.sum)
         invertedDocumentFrequency(term) = math.log(terms.size / termNumberOfOccurrences(term))
       })
 
-      initMetrics(measuredQueriesFileName, relevantDocsFileName, docsFileName)
+        //initMetrics(measuredQueriesFileName, relevantDocsFileName, docsFileName)
     }
 
   }
 
   def fileRoutine(f: File) = {
-    val lines = Source.fromFile(f).getLines()
-    docIdUrl(Integer.parseInt(f.getName.split(".")(0))) = lines.toSeq.head
-    val fileTerms = mutable.HashSet(stemTokens(tokenize(lines.drop(1).mkString(" "))) :_*)
+     val lines = Source.fromFile(f).getLines()
+     if (lines.nonEmpty) {
+       docIdUrl(Integer.parseInt(f.getName)) = lines.toSeq.head
+       val fileTerms = mutable.HashSet(stemTokens(tokenize(lines.drop(1).mkString(" "))): _*)
 
-    fileTerms.foreach(term => {
-      termNumberOfOccurrences(term) += 1
-      if (!terms.contains(term)) {
-        terms.add(term)
-        termNumber(term) = terms.size - 1
-      }
-    })
+       fileTerms.foreach(term => {
+         //termNumberOfOccurrences(term)(Integer.parseInt(f.getName)) += 1
+         termNumberOfOccurrences(term) += 1
+         if (!terms.contains(term)) {
+           terms.add(term)
+           termNumber(term) = terms.size - 1
+         }
+       })
+     }
   }
 
 
   def computeDocTfIdfScore(f: File) = {
     val vec = SparseVector.zeros[Double](terms.size)
     val lines = Source.fromFile(f).getLines()
-    val text = lines.drop(1).mkString(" ")
-    val fileTerms = mutable.HashSet(stemTokens(tokenize(text)) :_*)
+    if (lines.nonEmpty) {
+      val text = lines.drop(1).mkString(" ")
+      val fileTerms = mutable.HashSet(stemTokens(tokenize(text)): _*)
 
-    fileTerms.foreach(term => vec(termNumber(term)) = termFrequency(term, text)) //LNC variant
+      fileTerms.foreach(term =>
+        if (termNumber.contains(term))
+        vec(termNumber(term)) = termFrequency(term, text)) //LNC variant
+        //vec(termNumber(term)) = termNumberOfOccurrences(term)(Integer.parseInt(f.getName)))
 
-    docsTfIdfScores(Integer.parseInt(f.getName.split(".")(0))) = normalize(vec)
+      docsTfIdfScores(Integer.parseInt(f.getName)) = normalize(vec)
+    }
   }
 
   def computeDocTfIdfScore(text: String) = {
     val vec = SparseVector.zeros[Double](terms.size)
     val docTerms = mutable.HashSet(stemTokens(tokenize(text)) :_*)
 
-    docTerms.foreach(term => vec(termNumber(term)) = termFrequency(term, text)) //LNC variant
+    docTerms.foreach(term =>
+      if (termNumber.contains(term))
+      vec(termNumber(term)) = termFrequency(term, text)) //LNC variant
 
     normalize(vec)
   }
@@ -105,12 +120,18 @@ object InvertedIndexImpl extends InvertedIndex {
   def queryTfIdfScore(query: String): SparseVector[Double] = {
     val vec = SparseVector.zeros[Double](terms.size)
     val queryTerms = stemTokens(tokenize(query))
-    queryTerms.foreach(term => vec(termNumber(term)) = termFrequency(term, query) * invertedDocumentFrequency(term))
+    queryTerms.foreach(term =>
+      if (termNumber.contains(term))
+      vec(termNumber(term)) = termFrequency(term, query) * invertedDocumentFrequency(term))
 
     normalize(vec)
   }
 
-  def termFrequency(term: String, text: String): Double = { 1 + math.log(text.count(_ == term)) }
+  def termFrequency(term: String, text: String): Double = {
+    val freq = StringUtils.countMatches(text,term)
+    if(freq == 0) 1
+    else 1 + math.log(freq)
+  }
 
   def initMetrics(measuredQueriesFileName: String, relevantDocsFileName: String, docsFileName: String) = {
 

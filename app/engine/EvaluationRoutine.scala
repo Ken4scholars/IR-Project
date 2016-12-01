@@ -16,7 +16,7 @@ object EvaluationRoutine {
     val queries = Source.fromFile("/Users/Gregory/Documents/Innopolis/IR/IR-Project/measuredqueries").getLines()
     val avgPrecisions = new Array[Double](queries.length)
     val terms = new mutable.HashSet[String]
-    val docsTfIdfScores = new mutable.HashMap[Int, SparseVector[Double]]
+    val evalDocsTfIdfScores = new mutable.HashMap[Int, SparseVector[Double]]
 
     val  metricsDocs = new mutable.HashMap[Int, String]()
     var count = 1
@@ -47,11 +47,11 @@ object EvaluationRoutine {
     })
 
     metricsDocs.foreach(t => stemTokens(tokenize(t._2)).foreach(term => terms.add(term)))
-    metricsDocs.foreach(t => docsTfIdfScores(t._1) = computeDocTfIdfScore(t._2))
+    metricsDocs.foreach(t => evalDocsTfIdfScores(t._1) = computeDocTfIdfScore(t._2))
 
     def getTopKSimilarDocs(query: String, numberOfDocs: Int): Seq[Int] = {
       val queryScore = queryTfIdfScore(query)
-      docsTfIdfScores
+      evalDocsTfIdfScores
         .map(t => (t._1, t._2.dot(queryScore)))
         .toSeq
         .sortBy(- _._2)

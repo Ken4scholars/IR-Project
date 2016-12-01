@@ -26,7 +26,7 @@ import scala.util.{Failure, Success}
 class SearchController extends Controller {
 
   var data: Array[Document] = Array.empty[Document]
-  val pageLength = 10
+  val pageLength = 7
 
   def search(query: String) = Action.async { request =>
     println(query)
@@ -38,7 +38,7 @@ class SearchController extends Controller {
     val futures = Future.sequence(docs.toTraversable)
     futures map { documents =>
       data = documents.toArray
-      Ok(views.html.results(data.slice(0, pageLength), data.length, 1, pageLength))
+      Ok(views.html.results(data.slice(0, pageLength), data.length, 1, pageLength, query))
     }
   }
 
@@ -55,13 +55,12 @@ class SearchController extends Controller {
     }
   }
 
-  def searchList(query: String = "hello", page: Int) = Action { request =>
+  def searchList(query: String, page: Int) = Action { request =>
     if (data.isEmpty) Redirect(routes.SearchController.search(query))
     else {
       val beg = (page - 1) * pageLength
       val documents = data.slice(beg, beg + pageLength)
-      val count = data.length
-      Ok(views.html.results(documents, count, page, pageLength))
+      Ok(views.html.results(documents, data.length, page, pageLength, query))
     }
   }
 

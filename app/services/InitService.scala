@@ -9,12 +9,14 @@ import engine.InvertedIndexImpl
   */
 @Singleton
 class InitService {
-  private val dirname = "/home/kenneth"
+//  private val dirname = "wikipedia_data"
+  private val dirname = "/media/kenneth/documents/data"
+
 
   def init() = {
     if(!InvertedIndexImpl.initialized){
       print("Init started....")
-      InvertedIndexImpl.init(dirname,"","","")
+      InvertedIndexImpl.init(dirname)
     }
   }
 
